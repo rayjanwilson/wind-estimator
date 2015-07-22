@@ -25,6 +25,8 @@ def estimate_wind(yaw=0, pitch=0, roll=0, compass=0):
     [0, -sin(Roll), cos(Roll)]
     ])
 
+    # i think this one is wrong
+    # rotation matrix from body frame to inertial frame
     Rcom = np.array([
     [cos(Compass), sin(Compass), 0],
     [-sin(Compass), cos(Compass), 0],
