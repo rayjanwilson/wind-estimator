@@ -1,4 +1,4 @@
-data flash neecs
+data flash needs
 
 - EKF1
     - TimeMS - time in msec from startup
@@ -19,6 +19,16 @@ data flash neecs
     - YawIn: the pilot’s desired yaw rate as a number from -4500 ~ 4500 (not in deg/sec, clockwise is positive)
     - Yaw: the vehicles actual heading in centi-degrees with 0 = north
     - NavYaw: the desired heading in centi-degrees
+- CTUN (throttle and altitude information):
+    - ThrIn: the pilot’s throttle in as a number from 0 to 1000
+    - SonAlt: the altitude above ground according to the sonar
+    - BarAlt: the altitude above ground according to the barometer
+    - WPAlt: the desired altitude while in AltHold, Loiter, RTL or Auto flight modes
+    - NavThr: not used
+    - AngBst: throttle increase (from 0 ~ 1000) as a result of the copter leaning over (automatically added to all pilot and autopilot throttle to reduce altitude loss while leaning)
+    - CRate: accelerometer + baro climb rate estimate in cm/s
+    - ThrOut: final throttle output sent to the motors (from 0 ~ 1000). Normally equal to ThrIn+AngBst while in stabilize mode.
+    - DCRate – pilot desired climb rate in cm/s
 - CURRENT (battery voltage, current and board voltage information):
     - Thr: pilot input throttle from 0 ~ 1000
     - ThrInt: integrated throttle (i.e. sum of total throttle output for this flight)
@@ -40,7 +50,10 @@ data flash neecs
 - Mode (flight mode):
     - Mode: the flight mode displayed as a string (i.e. STABILIZE, LOITER, etc)
     - ThrCrs: throttle cruise (from 0 ~ 1000) which is the autopilot’s best guess as to what throttle is required to maintain a stable hover
+- RCOUT
 
+GPS Labels:  ['TimeUS', 'Status', 'GMS', 'GWk', 'NSats', 'HDop', 'Lat', 'Lng', 'RAlt', 'Alt', 'Spd', 'GCrs', 'VZ']
+EKF1 Labels:  ['TimeUS', 'Roll', 'Pitch', 'Yaw', 'VN', 'VE', 'VD', 'PN', 'PE', 'PD', 'GX', 'GY', 'GZ']
 
 GPS, time_us, status, gps_week_ms, gps week, num_sats, hdop, latitude, longitude, altitude, ground_speed, ground_course, vel_z
 GPS, 90677253, 3, 501201000, 1853, 12, 1.73, 64.8540366, -147.8592679, 0.00, 147.21, 0.14, 0.00, 0.34
