@@ -67,6 +67,7 @@ void loop() {
       float objt = tmp007.readObjTempC();
       float diet = tmp007.readDieTempC();
       float hum = htu.readHumidity();
+      float hum_temp = htu.readTemperature();
       
       DateTime now = rtc.now();
       //long seconds = now.secondstime();
@@ -80,6 +81,8 @@ void loop() {
         logfile.print(diet);
         logfile.print(", ");
         logfile.print(hum);
+        logfile.print(", ");
+        logfile.print(hum_temp);
         logfile.println();
         logfile.close();
         
@@ -92,7 +95,9 @@ void loop() {
       Serial.print(", ");
       Serial.print(diet);
       Serial.print(", ");
-      Serial.print(hum);      
+      Serial.print(hum);
+      Serial.print(", ");
+      Serial.print(hum_temp);
       Serial.println(" ");
 
   }
