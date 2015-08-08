@@ -3,9 +3,10 @@ from __future__ import print_function
 from __future__ import division
 from DataflashLog import DataflashLog, LogIterator, DataflashLogHelper
 import collections
+import gps_to_human_time as gps
 
-#logfile = "logs/15-07-17_11-29-32.log"
-logfile = "logs/15-07-17_11-57-40.log"
+logfile = "logs/15-07-17_11-29-32.log"
+#logfile = "logs/15-07-17_11-57-40.log"
 print("Parsing: ", logfile)
 logdata = DataflashLog(logfile)
 print("Complete")
@@ -31,11 +32,14 @@ for (startLine,endLine) in loiterChunks:
     nextgpsTime = gpsStart + increment
     print("GPS Start: ", gpsStart)
     i=0
+    print("i", "lit.currentLine", "timeUS", "timeGPS_GMS", "timeGPS_GWk", "timeGPS_DaySec", "roll", "pitch", "yaw", "vd", "pd", "lat", "lon")
     while lit.currentLine <= endLine:
         if (nextgpsTime <= lit["GPS"]["GMS"]):
             # only parse the log every gps second
             timeUS = lit["GPS"]["TimeUS"]
-            timeGPS = lit["GPS"]["GMS"]
+            timeGPS_GMS = lit["GPS"]["GMS"]
+            timeGPS_GWk = lit["GPS"]["GWk"]
+            timeGPS_DaySec = gps.weekMS_to_daySec(timeGPS_GMS, timeGPS_GWk)
             roll  = lit["EKF1"]["Roll"]
             pitch = lit["EKF1"]["Pitch"]
             yaw = lit["EKF1"]["Yaw"]
@@ -44,7 +48,7 @@ for (startLine,endLine) in loiterChunks:
             lat = lit["GPS"]["Lat"]
             lon = lit["GPS"]["Lng"]
 
-            print(i, lit.currentLine, timeUS, timeGPS, roll, pitch, yaw, vd, pd, lat, lon)
+            print(i, lit.currentLine, timeUS, timeGPS_GMS, timeGPS_GWk, timeGPS_DaySec, roll, pitch, yaw, vd, pd, lat, lon)
 
             nextgpsTime = nextgpsTime + increment
             i += 1
