@@ -1,7 +1,10 @@
 #!/usr/bin/env python
 
 import numpy as np
-from math import sin, cos, pi
+from math import sin, cos, tan, pi
+
+def mdot(*args):
+    return reduce(np.dot, args)
 
 def estimate_wind(yaw=0, pitch=0, roll=0, compass=0):
     Yaw = yaw * pi/180
@@ -24,25 +27,39 @@ def estimate_wind(yaw=0, pitch=0, roll=0, compass=0):
     [0, cos(Roll), sin(Roll)],
     [0, -sin(Roll), cos(Roll)]
     ])
-
-    # i think this one is wrong
-    # rotation matrix from body frame to inertial frame
     Rcom = np.array([
     [cos(Compass), sin(Compass), 0],
     [-sin(Compass), cos(Compass), 0],
     [0, 0, -1]
     ])
-    #print(Ryaw)
-    #print(Rpitch)
-    #print(Rroll)
 
-    k = np.dot(np.array([0, 0, 1]), np.dot(Rroll, np.dot(Rpitch, np.dot(Ryaw,Rcom))))
-    print('{0:.3f} N\n{1:.3f} E\n{2:.3f} z').format(k[0], k[1], k[2])
+    # Ryaw_t = np.transpose(Ryaw)
+    # Rpitch_t = np.transpose(Rpitch)
+    # Rroll_t = np.transpose(Rroll)
+    # Rcom_t = np.transpose(Rcom)
+
+    IJK = mdot(Ryaw, Rpitch, Rroll)
+    ENU = mdot(Rcom, IJK)
+
+    E = mdot(np.array([1, 0, 0]), ENU)
+    N = mdot(np.array([0, 1, 0]), ENU)
+    U = mdot(np.array([0, 0, 1]), ENU)
+
+
+    print("{}\n{}\n{}\n").format(E, N, U)
 
 
 if __name__ == "__main__":
     yaw = 0
     pitch = 0
     roll = 0
-    compass = 45
+    compass = 0
+
+    print("zeros")
     estimate_wind(yaw, pitch, roll, compass)
+    print("compass 45, no rotation")
+    estimate_wind(yaw, pitch, roll, 45)
+    print("yaw 45, compass 45")
+    estimate_wind(45, pitch, roll, 45)
+    print("compass small angle")
+    estimate_wind(yaw, pitch, roll, 1)
